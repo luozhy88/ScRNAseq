@@ -1,0 +1,9 @@
+{
+    "input": "\/home/chage/Desktop/nfcore_scRNA_sixhosp_21subjects/samplesheet.csv",
+    "outdir": "\/home/chage/Desktop/nfcore_scRNA_sixhosp_21subjects/output",
+    "aligner": "star",
+    "skip_fastqc": true,
+    "fasta": "\/data/changrong/save_220T_user/changrong/Gencode/GRCh38.primary_assembly.genome.fa",
+    "gtf": "\/data/changrong/save_220T_user/changrong/Gencode/gencode.v44.primary_assembly.annotation.gtf",
+    "save_reference": true
+}

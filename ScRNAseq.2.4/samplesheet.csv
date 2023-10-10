@@ -1,0 +1,2 @@
+sample,fastq_1,fastq_2,strandedness
+SH201905-294,/data/zhiyu/save_220T_user/Rawdata/single_cell_rnaseq/F21FTSECWLJ0171_HUMedboN/Fq/SH201905-294_S1_L001_R1_001.fastq.gz,/data/zhiyu/save_220T_user/Rawdata/single_cell_rnaseq/F21FTSECWLJ0171_HUMedboN/Fq/SH201905-294_S1_L001_R2_001.fastq.gz,auto
