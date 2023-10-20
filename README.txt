@@ -15,3 +15,6 @@ devtools::install_github(repo = "mojaveazure/loomR", ref = "develop")
 devtools::install_github("vqf/nVennR")
 devtools::install_github("combiz/scFlow")
 devtools::install_github("combiz/scFlowData")#https://api.github.com/repos/combiz/scFlowData/tarball/HEAD
+
+# BPCells
+https://bnprks.github.io/BPCells/articles/pbmc3k.html
