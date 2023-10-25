@@ -1,3 +1,8 @@
+Barcode是每个凝胶微珠的身份证号码，区分细胞
+UMI是每个DNA标签分子的身份证号码，区分分子
+Poly(dT)VN作用是与mRNA的Ploy(A)尾巴相结合，作为逆转录的引物，逆转录出cDNA
+https://www.youtube.com/watch?v=dbE1UlpxzHQ
+
 # ScRNAseq
 https://bioconductor.org/books/3.13/OSCA.intro/the-singlecellexperiment-class.html#overview-2
 ## Only keeping the first two assays
