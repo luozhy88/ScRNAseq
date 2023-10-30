@@ -1,0 +1,1 @@
+/data3/zhiyu/pipelines/scRNA/nfcore_scRNA_sixhosp_21subjects_alevin/nfcore_scRNA_sixhosp_21subjects/bulkrna_scrna_meta

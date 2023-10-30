@@ -1,0 +1,154 @@
+---
+title: "quality_control"
+author: "YNYK"
+output: 
+  html_document: 
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Load Library
+```{r include=FALSE}
+library(scater)
+library(SingleCellExperiment)
+library(org.Hs.eg.db)
+library(singleCellTK)
+library(AnnotationHub)
+library(Seurat)
+library(edgeR)
+```
+
+
+## Choice of QC metrics
+
+We use 3 QC metrics to identify low-quality cells based on their expression profiles.
+
+ - sum: The total count for each cell.
+ - detected:  The number of detected genes.
+ - subsets_Mito_percent: The percentage of reads mapped to mitochondrial transcripts.
+ 
+
+```{r}
+## load the original sce
+sce <- readRDS("../01_data_prep/scrna_19sample_sce.RDS")
+```
+
+
+```{r}
+# ## using resources in AnnotationHub to retrieve chromosomal locations given the Ensembl IDs
+ah <- AnnotationHub()
+# # save(ah, file = "AnnotationHub.RData")
+# load("AnnotationHub.RData")
+ens.hs.v103 <- ah[["AH89426"]]
+# 
+# ## gets the mapped ids (column) for Ensemble ID
+chr.loc <- mapIds(ens.hs.v103, keys=rownames(sce),
+    keytype="GENEID", column="SEQNAME")
+is.mito <- which(chr.loc=="MT")
+df <- perCellQCMetrics(sce, subsets=list(Mito=is.mito))
+# 
+# ## computes and appends the per-cell QC statistics to the colData of the sce
+sce <- addPerCellQC(sce, subsets=list(Mito=is.mito))
+```
+
+## Identifying low-quality cells
+
+### With adaptive thresholds
+
+We identify cells with log-transformed library sizes that are more than 3 MADs below the median (sum, detected, subsets_Mito_percent). A cell that is an outlier for any of these metrics is considered to be of low quality and discarded.
+A log-transformation is used to improve resolution at small values when type="lower".
+
+
+```{r}
+## sum level
+qc.lib <- isOutlier(df$sum, log=TRUE, type="lower")
+
+## detected level
+qc.nexprs <- isOutlier(df$detected, log=TRUE, type="lower")
+
+## subsets_Mito_percent level
+qc.mito <- isOutlier(df$subsets_Mito_detected, type="higher")
+
+## combine 3 qc metrics to identify discard cells
+discard <- qc.lib | qc.nexprs | qc.mito
+
+colData(sce) <- cbind(colData(sce), discard, qc.lib, qc.nexprs, qc.mito)
+```
+
+
+## Checking diagnostic plots
+```{r, fig.width=12, fig.height=9}
+plotColData(sce, x="sample", y="sum", colour_by="discard") + 
+  scale_y_log10() + 
+  ggtitle("Total count") +
+  theme(axis.text.x = element_text(vjust = 0.5, hjust = 0.5, angle = 90))
+
+plotColData(sce, x="diagnosis", y="sum", colour_by="discard") + 
+  scale_y_log10() + 
+  ggtitle("Total count") +
+  theme(axis.text.x = element_text(vjust = 0.5, hjust = 0.5, angle = 90))
+
+
+plotColData(sce, x="sample", y="detected", colour_by="discard") + 
+  scale_y_log10() + 
+  ggtitle("Detected features") +
+  theme(axis.text.x = element_text(vjust = 0.5, hjust = 0.5, angle = 90))
+
+plotColData(sce, x="diagnosis", y="detected", colour_by="discard") + 
+  scale_y_log10() + 
+  ggtitle("Detected features") +
+  theme(axis.text.x = element_text(vjust = 0.5, hjust = 0.5, angle = 90))
+
+
+# plotColData(sce, x="sample", y="subsets_Mito_percent", colour_by="discard") + 
+#   scale_y_log10() + 
+#   ggtitle("Mito percent") +
+#   theme(axis.text.x = element_text(vjust = 0.5, hjust = 0.5, angle = 90))
+# 
+# plotColData(sce, x="diagnosis", y="subsets_Mito_percent", colour_by="discard") + 
+#   scale_y_log10() + 
+#   ggtitle("Mito percent") +
+#   theme(axis.text.x = element_text(vjust = 0.5, hjust = 0.5, angle = 90))
+
+
+plotColData(sce, x="sum", y="detected", colour_by="discard")
+# plotColData(sce, x="sum", y="subsets_Mito_percent", colour_by="discard")
+# plotColData(sce, x="detected", y="subsets_Mito_percent", colour_by="discard")
+```
+
+## Removing low-quality cells
+
+We can diagnose cell type loss by looking for systematic differences in gene expression between the discarded and retained cells. To demonstrate, we compute the average count across the discarded and retained pools.
+
+```{r}
+# Keeping the columns we DON'T want to discard.
+filtered <- sce[,!discard]
+saveRDS(filtered, file = "scrna_19sample_removed_low_quality_sce.RDS")
+```
+
+
+
+
+<!-- ```{r} -->
+<!-- # Using the 'discard' vector for demonstration purposes, as it has more cells for stable calculation of 'lost'. -->
+<!-- lost <- calculateAverage(counts(sce)[,!discard]) -->
+<!-- kept <- calculateAverage(counts(sce)[,discard]) -->
+
+<!-- logged <- cpm(cbind(lost, kept), log=TRUE, prior.count=2) -->
+<!-- logFC <- logged[,1] - logged[,2] -->
+<!-- abundance <- rowMeans(logged) -->
+<!-- ``` -->
+
+<!-- No systematic upregulation of genes is apparent in the discarded pool, suggesting that the QC step did not inadvertently filter out a cell type. -->
+
+<!-- ```{r, fig.width=8, fig.height=6} -->
+<!-- plot(abundance, logFC, xlab="Average count", ylab="Log-FC (lost/kept)", pch=16) -->
+<!-- points(abundance[is.mito], logFC[is.mito], col="dodgerblue", pch=16) -->
+<!-- ``` -->
+
+
