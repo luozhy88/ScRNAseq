@@ -1,3 +1,9 @@
+# pipeline
+https://nf-co.re/scrnaseq/2.4.1
+nextflow run nf-core/scrnaseq -r 2.4.1 -profile test --outdir ceshi
+
+
+
 Barcode是每个凝胶微珠的身份证号码，区分细胞
 UMI是每个DNA标签分子的身份证号码，区分分子
 Poly(dT)VN作用是与mRNA的Ploy(A)尾巴相结合，作为逆转录的引物，逆转录出cDNA
