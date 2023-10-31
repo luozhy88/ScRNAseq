@@ -1,6 +1,6 @@
 # pipeline
 https://nf-co.re/scrnaseq/2.4.1
-nextflow run nf-core/scrnaseq -r 2.4.1 -profile test --outdir ceshi --aligner cellranger
+nextflow run nf-core/scrnaseq -r 2.4.1 -profile test --outdir ceshi --aligner cellranger; /bin/Rscript /data/zhiyu/data/script/send.mail.r
 
 
 
