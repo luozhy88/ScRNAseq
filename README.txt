@@ -1,7 +1,7 @@
 # pipeline
 https://nf-co.re/scrnaseq/2.4.1
 nextflow run nf-core/scrnaseq -r 2.4.1 -resume -profile test -c /path/custom.config --outdir ceshi --aligner cellranger; /bin/Rscript /data/zhiyu/data/script/send.mail.r
-
+注意：custom.config中修改了参数
 
 
 
