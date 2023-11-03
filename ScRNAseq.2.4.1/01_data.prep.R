@@ -15,7 +15,8 @@ sixhosp_21subjects_star <- LoadH5Seurat("/data3/zhiyu/pipelines/scRNA/nfcore_scR
 ## SCE format, the best format for single cell data analysis
 sce <- as.SingleCellExperiment(sixhosp_21subjects_star)
 
-## we need to annotate the gene code using the gtf for alignment (better to use the same GTF here as used for alignment)
+## we need to annotate the gene code using the gtf for alignment (better to use the same GTF here as used for alignment)all files were downloaed from the link below on 30, Sept, 2023
+http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/
 gene.data <- rtracklayer::import("~/data/Projects/YNYK/sixhop/sixhosp_nc_scd1_amci_ad_shjw_ad_version2/Singlecell_Sixhop/scRNA/20231009/nfcore_scRNA_sixhosp_21subjects_kallisto_ge/input/Gencode/gencode.v44.primary_assembly.annotation.gtf")
 # Cleaning up the object.
 gene.data <- gene.data[gene.data$type=="gene"]
