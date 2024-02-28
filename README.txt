@@ -34,3 +34,7 @@ devtools::install_github("combiz/scFlowData")#https://api.github.com/repos/combi
 
 # BPCells
 https://bnprks.github.io/BPCells/articles/pbmc3k.html
+
+# NBISweden
+https://github.com/NBISweden/workshop-scRNAseq  
+https://nbisweden.github.io/workshop-scRNAseq/home_contents.html  
